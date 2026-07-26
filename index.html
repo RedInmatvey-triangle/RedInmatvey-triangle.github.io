@@ -1,76 +1,214 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RedInmatvey-triangle | Linux Boot</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booting System...</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0c0d12;
+            color: #d1d5db;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        /* Стиль логирования загрузки */
+        #boot-screen {
+            white-space: pre-wrap;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .ok { color: #10b981; font-weight: bold; }
+        .info { color: #3b82f6; }
+        .warn { color: #f59e0b; }
+
+        #prompt {
+            margin-top: 20px;
+            color: #f59e0b;
+            font-weight: bold;
+            display: none;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Стиль секции Neofetch */
+        #main-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .neofetch-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .ascii-art {
+            color: #3b82f6;
+            font-weight: bold;
+            white-space: pre;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        .info-block {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .user-title {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .separator {
+            color: #4b5563;
+        }
+
+        .key {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .color-palette span {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 4px;
+        }
+
+        a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <!-- Экраны загрузки -->
-    <div id="boot-screen">
-        <div id="boot-log"></div>
-        <div id="boot-prompt" style="display: none;">
-            <span class="blink">▌</span> Press <strong>ENTER</strong> to continue...
-        </div>
-    </div>
 
-    <!-- Главный сайт (скрыт до нажатия Enter) -->
-    <div id="main-site" style="display: none;">
-        <div class="terminal">
+    <div id="boot-screen"></div>
+    <div id="prompt"> PRESS ENTER TO CONTINUE...</div>
+
+    <div id="main-content">
+        <div class="neofetch-container">
             <div class="ascii-art">
-                <pre>
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣄⠀⠀⠀⠀
-    ⠀⠀⠀⠀⣠⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀⠀
-    ⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀
-    ⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧
-    ⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-    ⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-    ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
-    ⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃
-    ⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀
-    ⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁⠀
-    ⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠀⠀
-    ⠀⠀⠀⠀⠘⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠈⠙⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠉⠀⠀⠀⠀⠀
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠛⠛⠛⠛⠛⠛⠛⠛⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                </pre>
+   .--.
+  |o_o |
+  |:_/ |
+ //   \ \
+(|     | )
+/'\_   _/`\
+\___)=(___/
             </div>
 
-            <div class="neofetch">
-                <div class="info">
-                    <p><span class="label">OS:</span> RedInmatvey-triangle Linux 6.12.0-arch1-1</p>
-                    <p><span class="label">Host:</span> Custom Build Server</p>
-                    <p><span class="label">Uptime:</span> 14 years, 3 months</p>
-                    <p><span class="label">Shell:</span> bash 5.2.37</p>
-                    <p><span class="label">Resolution:</span> 1920x1080</p>
-                    <p><span class="label">CPU:</span> Intel Xeon E3-1230 v2 @ 3.30GHz (8) 🧊</p>
-                    <p><span class="label">GPU:</span> Integrated / NVIDIA Quadro P4000</p>
-                    <p><span class="label">Memory:</span> 8GB DDR3 1600MHz</p>
-                    <p><span class="label">Storage:</span> 120GB SSD</p>
+            <div class="info-block">
+                <div><span class="user-title">sysadmin</span>@<span class="user-title">portfolio</span></div>
+                <div class="separator">------------------</div>
+                <div><span class="key">OS</span>: Custom Linux Profile</div>
+                <div><span class="key">Age</span>: 14 yo</div>
+                <div><span class="key">Role</span>: Linux System Administrator</div>
+                <div><span class="key">Languages</span>: Russian (Native), English, French, Chinese (Basic)</div>
+                <div><span class="key">Dev Stack</span>: Python, Bash Scripting</div>
+                <div><span class="key">Ops Stack</span>: Linux Admin, Docker, Nginx</div>
+                <div><span class="key">Interests</span>: Neural Networks / AI, Server Hardware</div>
+                <div><span class="key">Links</span>: 
+                    <a href="https://github.com/YOUR_USERNAME" target="_blank">[My Github]</a> 
+                    <a href="https://t.me/YOUR_USERNAME" target="_blank">[My Telegram]</a>
                 </div>
-                <div class="info">
-                    <p><span class="label">Languages:</span> 🇷🇺 Russian, 🇬🇧 English, 🇫🇷 French, 🇨🇳 Chinese</p>
-                    <p><span class="label">Skills:</span> Python, Bash, Docker, Nginx, AI/LLM</p>
-                    <p><span class="label">Distros:</span> 🐧 Ubuntu, Debian, Arch Linux</p>
-                    <p><span class="label">Hardware:</span> Servers, Networking, Repairs</p>
-                    <p><span class="label">Role:</span> Linux System Administrator</p>
-                    <p><span class="label">Age:</span> 14 years</p>
-                    <p><span class="label">GitHub:</span> <a href="https://github.com/RedInmatvey-triangle" target="_blank">@RedInmatvey-triangle</a></p>
-                    <p><span class="label">Telegram:</span> <a href="https://t.me/your-telegram" target="_blank">@your-telegram</a></p>
+                <br>
+                <div class="color-palette">
+                    <span style="background: #000000;"></span>
+                    <span style="background: #ef4444;"></span>
+                    <span style="background: #10b981;"></span>
+                    <span style="background: #f59e0b;"></span>
+                    <span style="background: #3b82f6;"></span>
+                    <span style="background: #8b5cf6;"></span>
+                    <span style="background: #06b6d4;"></span>
+                    <span style="background: #ffffff;"></span>
                 </div>
-            </div>
-
-            <div class="prompt-line">
-                <span class="user">redinmatvey</span><span class="at">@</span><span class="host">linux-server</span><span class="colon">:</span><span class="path">~</span><span class="dollar">$</span>
-                <span class="cursor blink">▌</span>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const bootMessages = [
+            "[  0.000000] Linux version 6.8.0-sysadmin (gcc version 13.2.0)",
+            "[  0.004123] BIOS-provided physical RAM map:",
+            "[  0.004150] BIOS-e820: [mem 0x0000000000000000-0x000000000009d7ff] usable",
+            "[  0.052110] CPU0: Thermal monitoring enabled",
+            "[  0.104230] Initializing cgroup subsys cpu",
+            "[  0.245100] <span class='ok'>[  OK  ]</span> Started Hardware Abstraction Layer.",
+            "[  0.312011] <span class='info'>[ INFO ]</span> Loading Neural Network Modules...",
+            "[  0.450190] <span class='ok'>[  OK  ]</span> Mounted /dev/server_hardware.",
+            "[  0.512300] <span class='ok'>[  OK  ]</span> Initialized Docker Engine.",
+            "[  0.620011] <span class='ok'>[  OK  ]</span> Started Nginx Web Server.",
+            "[  0.710420] <span class='ok'>[  OK  ]</span> Loaded Polyglot Module: EN, FR, RU, ZH.",
+            "[  0.890123] <span class='ok'>[  OK  ]</span> System Ready."
+        ];
+
+        const bootScreen = document.getElementById('boot-screen');
+        const prompt = document.getElementById('prompt');
+        const mainContent = document.getElementById('main-content');
+        
+        let lineIndex = 0;
+        let isBootFinished = false;
+
+        // Построчный вывод логов
+        function printBootLine() {
+            if (lineIndex < bootMessages.length) {
+                bootScreen.innerHTML += bootMessages[lineIndex] + "\n";
+                lineIndex++;
+                setTimeout(printBootLine, Math.random() * 150 + 50);
+            } else {
+                prompt.style.display = 'block';
+                isBootFinished = true;
+            }
+        }
+
+        // Обработка нажатия клавиши Enter
+        function handleKeyPress(e) {
+            if (isBootFinished && (e.key === 'Enter' || e.keyCode === 13)) {
+                bootScreen.style.display = 'none';
+                prompt.style.display = 'none';
+                mainContent.style.display = 'block';
+                document.title = "sysadmin@portfolio";
+                document.removeEventListener('keydown', handleKeyPress);
+            }
+        }
+
+        // Для удобства на мобильных устройствах (клик по экрану вместо Enter)
+        document.addEventListener('click', () => {
+            if (isBootFinished && mainContent.style.display !== 'block') {
+                bootScreen.style.display = 'none';
+                prompt.style.display = 'none';
+                mainContent.style.display = 'block';
+                document.title = "sysadmin@portfolio";
+            }
+        });
+
+        document.addEventListener('keydown', handleKeyPress);
+
+        // Запуск
+        window.onload = printBootLine;
+    </script>
 </body>
 </html>
