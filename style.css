@@ -1,0 +1,202 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #0a0e14;
+    color: #b3b1ad;
+    font-family: 'Courier New', monospace;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* === Boot Screen === */
+#boot-screen {
+    width: 100%;
+    max-width: 900px;
+    padding: 30px;
+    background: #0a0e14;
+    color: #b3b1ad;
+    font-size: 14px;
+    line-height: 1.6;
+    position: absolute;
+    z-index: 10;
+}
+
+#boot-log {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Courier New', monospace;
+}
+
+#boot-log .ok {
+    color: #5f9b5f;
+}
+
+#boot-log .warn {
+    color: #d7a84f;
+}
+
+#boot-log .err {
+    color: #d45a5a;
+}
+
+#boot-log .info {
+    color: #6a9fb5;
+}
+
+#boot-prompt {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #b3b1ad;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+#boot-prompt strong {
+    color: #d7a84f;
+}
+
+/* === Main Site === */
+#main-site {
+    width: 100%;
+    max-width: 1000px;
+    padding: 30px;
+    background: #0a0e14;
+    color: #b3b1ad;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    border: 1px solid #1a1f26;
+    border-radius: 8px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.terminal {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* === ASCII Art === */
+.ascii-art pre {
+    color: #6a9fb5;
+    font-size: 10px;
+    line-height: 1.1;
+    text-align: center;
+    margin: 0 auto;
+    user-select: none;
+}
+
+/* === Neofetch Info === */
+.neofetch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 40px;
+    margin: 15px 0 20px 0;
+    padding: 15px;
+    background: rgba(26, 31, 38, 0.5);
+    border-radius: 6px;
+    border-left: 3px solid #6a9fb5;
+}
+
+.info p {
+    margin: 2px 0;
+    white-space: nowrap;
+}
+
+.label {
+    color: #d7a84f;
+    font-weight: bold;
+    display: inline-block;
+    width: 100px;
+}
+
+.info a {
+    color: #6a9fb5;
+    text-decoration: none;
+}
+
+.info a:hover {
+    color: #d7a84f;
+    text-decoration: underline;
+}
+
+/* === Prompt === */
+.prompt-line {
+    margin-top: 15px;
+    font-size: 16px;
+    padding-top: 10px;
+    border-top: 1px solid #1a1f26;
+}
+
+.user {
+    color: #5f9b5f;
+}
+.at {
+    color: #b3b1ad;
+}
+.host {
+    color: #6a9fb5;
+}
+.colon {
+    color: #b3b1ad;
+}
+.path {
+    color: #d7a84f;
+}
+.dollar {
+    color: #b3b1ad;
+}
+.cursor {
+    color: #b3b1ad;
+    margin-left: 8px;
+}
+
+/* === Animations === */
+.blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    #boot-screen {
+        font-size: 11px;
+        padding: 15px;
+    }
+
+    #main-site {
+        padding: 15px;
+        font-size: 12px;
+        margin: 10px;
+        max-width: 100%;
+    }
+
+    .neofetch {
+        grid-template-columns: 1fr;
+        gap: 5px;
+        padding: 10px;
+    }
+
+    .label {
+        width: 80px;
+    }
+
+    .ascii-art pre {
+        font-size: 6px;
+    }
+
+    .prompt-line {
+        font-size: 13px;
+    }
+}
